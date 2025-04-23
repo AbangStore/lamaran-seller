@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Abang Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #2c2f33;
+      font-family: 'Orbitron', sans-serif;
+      color: white;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: #23272a;
+      padding: 2rem;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    input, textarea, select, button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 1rem;
+      background: #2c2f33;
+      color: white;
+      border: 1px solid #99aab5;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #7289da;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #5b6eae;
+    }
+
+    .note {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f04747;
+      color: white;
+      border-radius: 5px;
+      font-size: 13px;
+    }
+
+    #statusModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .modal-content {
+      background: #2f3136;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 320px;
+      width: 90%;
+      text-align: center;
+      color: white;
+    }
+
+    .modal-content .icon {
+      margin-bottom: 10px;
+    }
+
+    .close-btn {
+      background-color: #7289da;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      background-color: #5b6eae;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="login-container">
+  <h2>Login Discord</h2>
+  <input type="text" id="discordUser" placeholder="Contoh: abang#1234">
+  <button onclick="startForm()">Masuk</button>
+</div>
+
+<div class="container" id="form-container" style="display:none;">
+  <h2>Form Lamaran Store</h2>
+  <form id="lamaranForm">
+    <input type="text" name="namaLengkap" placeholder="Nama Lengkap" required>
+    <input type="text" name="usernameDiscord" id="usernameDiscord" disabled>
+    <input type="number" name="umur" placeholder="Umur" required>
+    <input type="text" name="kesibukan" placeholder="Kesibukan" required>
+    <input type="text" name="alamat" placeholder="Alamat (opsional)">
+    <textarea name="produk" placeholder="Produk yang Dijual" required></textarea>
+    <select name="tanggungJawab" required>
+      <option value="" disabled selected>Ingin Bertanggung Jawab?</option>
+      <option value="Ya">Ya</option>
+      <option value="Tidak">Tidak</option>
+    </select>
+    <button type="submit">Kirim Lamaran</button>
+  </form>
+  <div class="note">
+    <strong>Note:</strong><br>
+    KAMI DARI PIHAK STAFF STORE HANYA INGIN MENCEGAH/MENGHINDARI PENIPUAN/SCAMMER.<br>
+    KAMI HANYA INGIN KEPERCAYAAN DARI DIRI ANDA. TERIMAKASIH.
+  </div>
+</div>
+
+<!-- Modal Discord-style -->
+<div id="statusModal">
+  <div class="modal-content">
+    <div class="icon" id="statusIcon"></div>
+    <h3 id="statusTitle"></h3>
+    <p id="statusMessage"></p>
+    <button class="close-btn" id="closeModal">Tutup</button>
+  </div>
+</div>
+
+<script>
+  const discordKey = "discord_user";
+
+  function startForm() {
+    const input = document.getElementById("discordUser").value;
+    if (!input || !input.includes("#")) {
+      alert("Masukkan username Discord yang valid, contoh: abang#1234");
+      return;
+    }
+    sessionStorage.setItem(discordKey, input);
+    showForm();
+  }
+
+  function showForm() {
+    const user = sessionStorage.getItem(discordKey);
+    if (user) {
+      document.getElementById("login-container").style.display = "none";
+      document.getElementById("form-container").style.display = "block";
+      document.getElementById("usernameDiscord").value = user;
+    }
+  }
+
+  showForm(); // if user already logged in
+
+  // Handle form
+  const form = document.getElementById("lamaranForm");
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const discordUser = sessionStorage.getItem(discordKey) || "Anonymous#0000";
+
+    const embed = {
+      title: "📥 Pengajuan Lamaran Store",
+      color: 0xffffff,
+      author: {
+        name: discordUser,
+        icon_url: "https://cdn3.emoji.gg/emojis/4240-verified-green-animated.gif"
+      },
+      fields: [
+        { name: "Nama Lengkap", value: data.get("namaLengkap") },
+        { name: "Username Discord", value: discordUser },
+        { name: "Umur", value: data.get("umur") },
+        { name: "Kesibukan", value: data.get("kesibukan") },
+        { name: "Alamat", value: data.get("alamat") || "Tidak diisi" },
+        { name: "Produk yang Dijual", value: data.get("produk") },
+        { name: "Bertanggung Jawab?", value: data.get("tanggungJawab") }
+      ],
+      footer: {
+        text: `Lamaran oleh ${discordUser}`,
+        icon_url: "https://cdn3.emoji.gg/emojis/4240-verified-green-animated.gif"
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    try {
+      const res = await fetch("https://discord.com/api/webhooks/1363874209234948247/zm7-COghER4vHl0uQg4LWxmuDdoWafOAuBNm74WaIJeSwtxTfSDXRWDoMGc-74OXEP4T", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ embeds: [embed] })
+      });
+
+      showPopup(
+        "✅",
+        "Berhasil!",
+        "Lamaran kamu telah terkirim."
+      );
+    } catch (err) {
+      showPopup(
+        "❌",
+        "Gagal!",
+        "Terjadi kesalahan. Silakan coba lagi."
+      );
+    }
+  });
+
+  function showPopup(icon, title, message) {
+    document.getElementById("statusIcon").textContent = icon;
+    document.getElementById("statusTitle").textContent = title;
+    document.getElementById("statusMessage").textContent = message;
+    document.getElementById("statusModal").style.display = "flex";
+  }
+
+  document.getElementById("closeModal").addEventListener("click", () => {
+    document.getElementById("statusModal").style.display = "none";
+  });
+</script>
+</body>
+</html>
