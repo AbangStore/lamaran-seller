@@ -105,23 +105,23 @@
 
 <div class="container" id="login-container">
   <h2>Login Discord</h2>
-  <input type="text" id="discordUser" placeholder="Contoh: abang#1234">
+  <input type="text" id="discordUser" placeholder="Contoh: abangtense#9173">
   <button onclick="startForm()">Masuk</button>
 </div>
 
 <div class="container" id="form-container" style="display:none;">
-  <h2>Form Lamaran Store</h2>
+  <h2>Formulir Lamaran Seller STORE</h2>
   <form id="lamaranForm">
-    <input type="text" name="namaLengkap" placeholder="Nama Lengkap" required>
-    <input type="text" name="usernameDiscord" id="usernameDiscord" disabled>
-    <input type="number" name="umur" placeholder="Umur" required>
-    <input type="text" name="kesibukan" placeholder="Kesibukan" required>
-    <input type="text" name="alamat" placeholder="Alamat (opsional)">
-    <textarea name="produk" placeholder="Produk yang Dijual" required></textarea>
+    <input type="text" name="namaLengkap :" placeholder="Nama Lengkap" required>
+    <input type="text" name="usernameDiscord :" id="usernameDiscord" disabled>
+    <input type="number" name="umur :" placeholder="Umur Asli" required>
+    <input type="text" name="kesibukan :" placeholder="Kesibukan" required>
+    <input type="text" name="alamat lengkap :" placeholder="Alamat (opsional)">
+    <textarea name="produk :" placeholder="Produk yang diajukan" required></textarea>
     <select name="tanggungJawab" required>
-      <option value="" disabled selected>Ingin Bertanggung Jawab?</option>
-      <option value="Ya">Ya</option>
-      <option value="Tidak">Tidak</option>
+      <option value="" disabled selected>Siap Bertanggung Jawab?</option>
+      <option value="Sangat Siap">Ya</option>
+      <option value="Tidak Jadi">Tidak</option>
     </select>
     <button type="submit">Kirim Lamaran</button>
   </form>
@@ -148,7 +148,7 @@
   function startForm() {
     const input = document.getElementById("discordUser").value;
     if (!input || !input.includes("#")) {
-      alert("Masukkan username Discord yang valid, contoh: abang#1234");
+      alert("Masukkan username Discord yang valid, contoh: abangtense#9173");
       return;
     }
     sessionStorage.setItem(discordKey, input);
